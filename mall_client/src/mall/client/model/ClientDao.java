@@ -18,7 +18,7 @@ public class ClientDao {
 			String sql = "SELECT client_mail clientMail FROM client WHERE client_mail=? AND client_pw=PASSWORD(?)";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, client.getClienMail());
-			stmt.setString(2, client.getClientDate());
+			stmt.setString(2, client.getClientPw());
 			rs = stmt.executeQuery();
 			if(rs.next()) {
 				returnClient = new Client();
