@@ -7,15 +7,15 @@ import mall.client.commons.DBUtil;
 import mall.client.vo.Ebook;
 
 public class EbookDao {
-	private DBUtil dbutil;
+	private DBUtil dbUtil;
 	public List<Ebook> selectEbookListByPage(int beginRow, int rowPerPage) {// 부모타입으로 리턴
 		List<Ebook> list = new ArrayList<>();
-		this.dbutil = new DBUtil();
+		this.dbUtil = new DBUtil();
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			conn = this.dbutil.getConnection();
+			conn = this.dbUtil.getConnection();
 			String sql = "SELECT ebook_title ebookTitle, ebook_price ebookPrice FROM ebook ORDER BY ebook_date DESC LIMIT ?, ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, beginRow);
@@ -30,7 +30,7 @@ public class EbookDao {
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally { // try문을 실행하던 안하던 finally는 무조건 실행
-			this.dbutil.close(rs, stmt, conn);
+			this.dbUtil.close(rs, stmt, conn);
 		}
 		return list;
 		

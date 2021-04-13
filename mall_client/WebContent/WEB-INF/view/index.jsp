@@ -8,6 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<jsp:include page="/WEB-INF/view/inc/mainMenu.jsp"></jsp:include>
 	<!-- 메뉴1 -->
 	<!-- 메뉴2 -->
 	<h1>index</h1> <!-- jsp 말고 서블릿을 실행해야한다 -->
