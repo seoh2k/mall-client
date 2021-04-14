@@ -3,7 +3,7 @@ package mall.client.vo;
 public class Cart {
 	private int cartNo;
 	private String clientMail;
-	private int eookNo;
+	private int ebookNo;
 	private String cartDate;
 	
 	public int getCartNo() {
@@ -19,10 +19,10 @@ public class Cart {
 		this.clientMail = clientMail;
 	}
 	public int getEookNo() {
-		return eookNo;
+		return ebookNo;
 	}
 	public void setEookNo(int eookNo) {
-		this.eookNo = eookNo;
+		this.ebookNo = eookNo;
 	}
 	public String getCartDate() {
 		return cartDate;
@@ -32,7 +32,7 @@ public class Cart {
 	}
 	@Override
 	public String toString() {
-		return "Cart [cartNo=" + cartNo + ", clientMail=" + clientMail + ", eookNo=" + eookNo + ", cartDate=" + cartDate
+		return "Cart [cartNo=" + cartNo + ", clientMail=" + clientMail + ", ebookNo=" + ebookNo + ", cartDate=" + cartDate
 				+ "]";
 	}
 

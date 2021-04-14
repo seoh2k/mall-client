@@ -32,7 +32,7 @@ public class CartListController extends HttpServlet {
 		// 메소드 에서 사용하는 매개변수를 넘겨주기 위해 필요한 값을 가져온다.
 		Client client = new Client();
 		client = (Client)session.getAttribute("loginClient");
-		String clientMail = client.getClienMail();
+		String clientMail = client.getClientMail();
 		
 		// dao 호출
 		this.cartDao = new CartDao();

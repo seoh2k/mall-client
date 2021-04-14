@@ -17,7 +17,7 @@ public class InsertClientController extends HttpServlet {
 	// 폼: C -> V
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		if(session.getAttribute("loginClient") != null) {
+		if(session.getAttribute("loginClient") != null) { // 로그인 되었으면
 			response.sendRedirect("/IndexController");
 		}
 		request.getRequestDispatcher("/WEB-INF/view/client/insertClient.jsp").forward(request, response);
@@ -31,24 +31,27 @@ public class InsertClientController extends HttpServlet {
 		// 입력 form에서 받은 clientMail, clientPw 수집
 		String clientMail = request.getParameter("clientMail");
 		String clientPw = request.getParameter("clientPw");
+		// 디버깅
+		System.out.println("clientMail : " + clientMail);
+		System.out.println("clientPw : " + clientPw);
 		
 		// 메일 중복처리 메서드 호출
 		String returnClientMail = clientDao.selectClientMail(clientMail);
 		// 메일 중복 시 콘솔 메세지 출력 후 회원가입 페이지로 이동
-		if(returnClientMail != null) {
+		if(returnClientMail != null) { // 메일이 존재한다면
 			System.out.println("메일 중복");
 			response.sendRedirect(request.getContextPath()+"/InsertClientController");
 		}
 		
-		// 회원정보 client vo 객체에 저장
+		// 전처리: 회원정보 client vo 객체에 저장
 		Client client = new Client();
-		client.setClienMail(clientMail);
+		client.setClientMail(clientMail);
 		client.setClientPw(clientPw);
 		
-		// insert 메서드 호출
+		// Dao에서 insert 메서드 호출
 		clientDao.insertClient(client);
 		
-		// Client return
+		// redirect
 		response.sendRedirect(request.getContextPath()+"/IndexController");
 	}
 

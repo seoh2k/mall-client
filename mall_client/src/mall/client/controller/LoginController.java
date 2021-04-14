@@ -28,7 +28,7 @@ public class LoginController extends HttpServlet {
 		String clientMail = request.getParameter("clientMail");
 		String clientPw = request.getParameter("clientPw");
 		Client client = new Client();
-		client.setClienMail(clientMail);
+		client.setClientMail(clientMail);
 		client.setClientPw(clientPw);
 		
 		this.clientDao = new ClientDao();
