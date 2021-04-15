@@ -8,15 +8,15 @@ import mall.client.vo.Client;
 public class ClientDao {
 	private DBUtil dbUtil;
 	// 비밀번호 수정
-	public void updateClientPw(Client client) {
+	public int updateClientPw(Client client) {
 		this.dbUtil = new DBUtil();
+		int rowCnt = 0;
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
 		try {
 			// db 연결
 			conn = this.dbUtil.getConnection();
-			String sql = "UPDATE client SET client_pw=? WHERE client_mail=?";
+			String sql = "UPDATE client SET client_pw = PASSWORD(?) WHERE client_mail=?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, client.getClientPw());
 			stmt.setString(2, client.getClientMail());
@@ -28,8 +28,9 @@ public class ClientDao {
 		} finally {
 			this.dbUtil.close(null, stmt, conn);
 		}
-		
+		return rowCnt;	
 	}
+	
 	// 회원탈퇴
 	public void deleteClient(String clientMail) {
 		this.dbUtil = new DBUtil();

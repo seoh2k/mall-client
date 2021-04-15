@@ -47,7 +47,7 @@
 					<!-- DeleteCartController - CartDao.deleteCart() - redirect: /CartListController --> 
 					<td><a href="<%=request.getContextPath()%>/DeleteCartController?ebookNo=<%=ebookNo%>">삭제</a></td>
 					<!-- InsertOrdersController - insertOrders(), deleteCart(): ISSUE 트랜처리 - redirect: /OrdersListController -->
-					<td><a href="">주문</a></td>
+					<td><a href="">주문</a></td> 
 				</tr>
 		<%
 				}

@@ -25,7 +25,7 @@ public class UpdateClientPwController extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//회원 확인
+		// 회원 확인
 		HttpSession session = request.getSession();
 		if(session.getAttribute("loginClient") == null) {
 			response.sendRedirect(request.getContextPath()+"/IndexController");

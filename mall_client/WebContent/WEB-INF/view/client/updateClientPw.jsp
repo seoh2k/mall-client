@@ -6,12 +6,15 @@
 <title>updateClientPw</title>
 </head>
 <body>
+	<!-- mainMenu -->
+	<jsp:include page="/WEB-INF/view/inc/mainMenu.jsp"></jsp:include>
+	
 	<h1>updateClientPw</h1>
-	<form method="post" action="<%=request.getContextPath()%>/UpdateClientPwController" method="post">
+	<form method="post" action="<%=request.getContextPath()%>/UpdateClientPwController">
 		<table border="1">
 			<tr>
 				<th>새 비밀번호</th>
-				<td><input type="password" name="clientPw"></td>
+				<td><input type="password" name="clientPw" required="required"></td>
 			</tr>
 		</table>
 		<button type="submit">비밀번호 수정</button>
