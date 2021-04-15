@@ -18,11 +18,11 @@ public class Cart {
 	public void setClientMail(String clientMail) {
 		this.clientMail = clientMail;
 	}
-	public int getEookNo() {
+	public int getEbookNo() {
 		return ebookNo;
 	}
-	public void setEookNo(int eookNo) {
-		this.ebookNo = eookNo;
+	public void setEbookNo(int eookNo) {
+		this.ebookNo = ebookNo;
 	}
 	public String getCartDate() {
 		return cartDate;

@@ -7,6 +7,51 @@ import mall.client.vo.Client;
 
 public class ClientDao {
 	private DBUtil dbUtil;
+	// 비밀번호 수정
+	public void updateClientPw(Client client) {
+		this.dbUtil = new DBUtil();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			// db 연결
+			conn = this.dbUtil.getConnection();
+			String sql = "UPDATE client SET client_pw=? WHERE client_mail=?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, client.getClientPw());
+			stmt.setString(2, client.getClientMail());
+			// 디버깅
+			System.out.println("updateClientPw stmt: "+ stmt);
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			this.dbUtil.close(null, stmt, conn);
+		}
+		
+	}
+	// 회원탈퇴
+	public void deleteClient(String clientMail) {
+		this.dbUtil = new DBUtil();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			// db 연결
+			conn = this.dbUtil.getConnection();
+			String sql = "DELETE FROM client WHERE client_mail=?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, clientMail);
+			// 디버깅
+			System.out.println("deleteClient stmt: "+ stmt);
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			this.dbUtil.close(null, stmt, conn);
+		}
+		
+	}
 	
 	public Client selectClientOne(String clientMail) {
 		// 전처리

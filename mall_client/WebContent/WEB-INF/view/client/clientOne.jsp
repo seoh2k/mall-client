@@ -30,5 +30,11 @@
 				<td><%=clientOne.getClientDate() %></td>
 			</tr>
 		</table>
+		
+		<!-- UpdateClientPwController.doGet() - updateClientPw.jsp -->
+		<!-- UpdateClientPwController.doPost() - ClientDao.updateClientPw() - session.invalidate() - redirect: /IndexController -->
+		<a href="<%=request.getContextPath()%>/UpdateClientPwController"><button>비밀번호 수정</button></a>
+		<!-- DeleteClientController - ClientDao.deleteCartByClient(mail), ClientDao.deleteClient() - session.invalidate() - redirect: /IndexController -->
+		<a href="<%=request.getContextPath()%>/DeleteClientController"><button>회원탈퇴</button></a>
 </body>
 </html>

@@ -17,13 +17,17 @@
 	<%
 		List<Map<String, Object>> cartList = (List<Map<String, Object>>)(request.getAttribute("cartList"));
 	%>
+	
 	<table border="1">
 		<thead>
 			<tr>
+				<th>&nbsp</th>
 				<th>cartNo</th>
 				<th>ebookNo</th>
 				<th>ebookTitle</th>
 				<th>cartDate</th>
+				<th>삭제</th>
+				<th>주문</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -35,10 +39,15 @@
 				String cartDate = (String)map.get("cartDate");
 		%>
 				<tr>
+					<td><input type="checkbox" name=""></td>
 					<td><%=cartNo %></td>
 					<td><%=ebookNo %></td>
 					<td><%=ebookTitle %></td>
 					<td><%=cartDate.substring(0,11) %></td>
+					<!-- DeleteCartController - CartDao.deleteCart() - redirect: /CartListController --> 
+					<td><a href="<%=request.getContextPath()%>/DeleteCartController?ebookNo=<%=ebookNo%>">삭제</a></td>
+					<!-- InsertOrdersController - insertOrders(), deleteCart(): ISSUE 트랜처리 - redirect: /OrdersListController -->
+					<td><a href="">주문</a></td>
 				</tr>
 		<%
 				}
