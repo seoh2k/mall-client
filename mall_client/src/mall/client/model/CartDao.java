@@ -32,28 +32,30 @@ public class CartDao {
 		
 	}
 	
-	public void deleteCart(Cart cart) {
+	public int deleteCart(Cart cart) {
+		int rowCnt = 0; // 0 이면 삭제 안됨, 1 이면 삭제 완료
 		this.dbUtil = new DBUtil();
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
 		try {
 			conn = this.dbUtil.getConnection();
-			String sql = "DELETE from cart WHERE client_mail=? AND ebook_no=?";
+			String sql = "DELETE FROM cart WHERE client_mail = ? AND ebook_no = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, cart.getClientMail());
 			stmt.setInt(2, cart.getEbookNo());
 			// 디버깅
 			System.out.println("deleteCart stmt: "+ stmt);
-			stmt.executeUpdate();
+			rowCnt = stmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			this.dbUtil.close(null, stmt, conn);
 		}
+		return rowCnt;
 		
 	}
 	
+	// 장바구니 중복 상품 확인하는 메소드
 	public boolean selectClientMail(Cart cart) {
 		boolean flag = true; // 중복 없음
 		this.dbUtil = new DBUtil();
@@ -69,12 +71,10 @@ public class CartDao {
 			stmt.setString(1, cart.getClientMail());
 			stmt.setInt(2, cart.getEbookNo());
 			System.out.println("selectClientMail stmt: "+ stmt);
-			
 			rs = stmt.executeQuery();
 			if(rs.next()) {
 				flag = false; // 중복 있음
 			}
-				
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
