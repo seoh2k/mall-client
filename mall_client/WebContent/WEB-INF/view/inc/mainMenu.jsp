@@ -31,6 +31,8 @@
 				<!-- ClientOneController - ClientDao.selectClientOne() - /view/client/clientOne.jsp -->
 				<li><a href="<%=request.getContextPath()%>/ClientOneController">회원정보</a></li>
 				<li><a href="<%=request.getContextPath()%>/CartListController">장바구니</a></li>
+				<!-- OrdersListController - OrdersDao.selectOrdersListByClient() - OrderList.jsp -->
+				<li><a href="<%=request.getContextPath()%>/OrdersListController">주문리스트</a></li>
 			</ul>
 		</div>
 <%

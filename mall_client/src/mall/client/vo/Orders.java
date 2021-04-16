@@ -37,12 +37,9 @@ public class Orders {
 	public void setOrdersState(String ordersState) {
 		this.ordersState = ordersState;
 	}
-	
 	@Override
 	public String toString() {
 		return "Orders [ordersNo=" + ordersNo + ", ebookNo=" + ebookNo + ", clientNo=" + clientNo + ", ordersDate="
 				+ ordersDate + ", ordersState=" + ordersState + "]";
 	}
-	
-	
 }

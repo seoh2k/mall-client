@@ -34,8 +34,5 @@ public class Cart {
 	public String toString() {
 		return "Cart [cartNo=" + cartNo + ", clientMail=" + clientMail + ", ebookNo=" + ebookNo + ", cartDate=" + cartDate
 				+ "]";
-	}
-
-	
-	
+	}	
 }
