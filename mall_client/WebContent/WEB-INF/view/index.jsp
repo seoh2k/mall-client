@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import = "java.util.*" %>
 <%@ page import = "mall.client.vo.*" %>
+<%@ page import = "mall.client.model.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +18,20 @@
 	<h1>index</h1> <!-- jsp 말고 서블릿을 실행해야한다 -->
 	<%
 		List<Ebook> ebookList = (List<Ebook>)(request.getAttribute("ebookList"));
+		
+		List<Category> categoryList = (List<Category>)(request.getAttribute("categoryList"));
 	%>
+	<!-- 카테고리별 목록을 볼 수 있는 메뉴(네비게이션) -->
+	<ul>
+		<li><a href="<%=request.getContextPath()%>/IndexController">[전체]</a></li>
+		<%
+			for(Category c : categoryList){
+		%>
+				<a href="<%=request.getContextPath()%>/IndexController?categoryName=<%=c.getCategoryName()%>"><%=c.getCategoryName()%></a>
+		<%
+			}
+		%>
+	</ul>
 	<table border="1">
 		<tr>
 		<%
@@ -43,5 +57,12 @@
 		%>
 		</tr>
 	</table>
+	
+	<!-- 이북 검색 -->
+	<form action="<%=request.getContextPath()%>/IndexController" method="post">
+		EbookTitle : 
+		<input type="text" name="searchWord">
+		<button type="submit">검색</button>
+	</form>
 </body>
 </html>
