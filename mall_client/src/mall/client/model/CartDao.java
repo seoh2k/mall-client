@@ -84,6 +84,7 @@ public class CartDao {
 	}
 	
 	public int insertCart(Cart cart) {
+		System.out.println(cart);
 		this.dbUtil = new DBUtil();
 		int rowCnt = 0;
 		Connection conn = null;

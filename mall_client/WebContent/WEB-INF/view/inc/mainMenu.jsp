@@ -7,8 +7,8 @@
 		<!-- 로그아웃일때 -->
 		<div>
 			<form action="<%=request.getContextPath()%>/LoginController" method="post">
-				ID : <input type="text" name="clientMail">
-				PW : <input type="password" name="clientPw">
+				ID : <input type="text" name="clientMail" value="sjendrickein@elpais.com">
+				PW : <input type="password" name="clientPw" value="1234">
 				<button type="submit">로그인</button>
 			</form>
 			<ul>

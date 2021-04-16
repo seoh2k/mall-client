@@ -18,10 +18,11 @@ public class InsertCartController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if(session.getAttribute("loginClient") == null) {
-			response.sendRedirect("/IndexController");
+			response.sendRedirect(request.getContextPath()+"/IndexController");
 			return;
 		}
 		int ebookNo = Integer.parseInt(request.getParameter("ebookNo"));
+		
 		// dao 호출
 		this.cartDao = new CartDao();
 		Cart cart = new Cart();
@@ -34,8 +35,6 @@ public class InsertCartController extends HttpServlet {
 		} else { 
 			System.out.println("카트에 중복된 데이터 존재");
 		}
-		
-		this.cartDao.insertCart(cart);
 		
 		response.sendRedirect(request.getContextPath()+"/CartListController");
 	}

@@ -21,7 +21,7 @@ public class Cart {
 	public int getEbookNo() {
 		return ebookNo;
 	}
-	public void setEbookNo(int eookNo) {
+	public void setEbookNo(int ebookNo) {
 		this.ebookNo = ebookNo;
 	}
 	public String getCartDate() {
