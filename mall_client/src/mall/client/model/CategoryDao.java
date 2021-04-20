@@ -10,37 +10,35 @@ import mall.client.vo.*;
 
 public class CategoryDao {
 	private DBUtil dbUtil;
-	public ArrayList<Category> selectCategoryList() {
+	public List<Category> selectCategoryList() {
 		this.dbUtil = new DBUtil();
-		ArrayList<Category> returnCategoryList = new ArrayList<Category>(); 
+		List<Category> list = new ArrayList<>();
+		Category category = null;
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-
+		
 		try {
-			//db연결
 			conn = this.dbUtil.getConnection();
-			//sql 혹시나 나중에 가중치를 사용할지도 모르기때문에 weight도 category객체에 넣어둔다.
-			String sql = "SELECT category_name categoryName, category_weight categoryWeight FROM category";
-
-			//쿼리실행
+			String sql = "SELECT * FROM category ORDER BY category_weight DESC";
 			stmt = conn.prepareStatement(sql);
-			System.out.println(stmt + "<-- CategoryDao.java에서 selectCategoryList()에서 stmt");
+			System.out.println("selectCategory " + stmt);
+			
 			rs = stmt.executeQuery();
+			
 			while(rs.next()) {
-				Category category = new Category();
-				category.setCategoryName(rs.getString("categoryName"));
-				category.setCategoryWeight(rs.getInt("categoryWeight"));
-				returnCategoryList.add(category);
+				category = new Category();
+				category.setCategoryName(rs.getString("category_name"));
+				// category.setCategoryWeight(rs.getInt("category_weight")); 가중치 사용하는 곳 없음
+				list.add(category);
 			}
-
-		} catch(Exception e) {
+		}catch(Exception e) {
 			e.printStackTrace();
-		} finally {
+		}finally {
 			this.dbUtil.close(rs, stmt, conn);
 		}
-
-		return returnCategoryList;
+		
+		return list;
 	}
 
 }

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.*" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,33 +10,13 @@
 	<jsp:include page="/WEB-INF/view/inc/mainMenu.jsp"></jsp:include>
 	
 	<h1>ebookCalendar</h1>
-	<%
-		List<Map<String, Object>> ebookListByMonth = (List<Map<String, Object>>)request.getAttribute("ebookListByMonth");
-		int currentYear = (Integer)request.getAttribute("currentYear");
-		int currentMonth = (Integer)request.getAttribute("currentMonth");
-		int endDay = (Integer) request.getAttribute("endDay");
-		int firstDayOfWeek = (Integer)request.getAttribute("firstDayOfWeek");
-		
-		int preMonth = currentMonth - 1;
-		int preYear = currentYear;
-		if(preMonth == 0){
-			preMonth = 12;
-			preYear -= 1;
-		}
-		int nextMonth = currentMonth + 1;
-		int nextYear = currentYear;
-		if(nextMonth == 13){
-			nextMonth = 1;
-			nextYear += 1;
-		}
-	%>
 	
 	<!-- n행 7열 -->
 	<div>
-		<a href="<%=request.getContextPath()%>/EbookCalendarController?currentYear=<%=preYear%>&currentMonth=<%=preMonth%>">이전달</a>
-		<span><%=currentYear %>년</span>
-		<span><%=currentMonth %>월</span>
-		<a href="<%=request.getContextPath()%>/EbookCalendarController?currentYear=<%=nextYear%>&currentMonth=<%=nextMonth%>">다음달</a>
+		<a href="${pageContext.request.contextPath}/EbookCalendarController?currentYear=${preYear}&currentMonth=${preMonth}">이전달</a>
+		<span>${currentYear}년</span>
+		<span>${currentMonth}월</span>
+		<a href="${pageContext.request.contextPath}/EbookCalendarController?currentYear=${nextYear}&currentMonth=${nextMonth}">다음달</a>
 	</div>
 	<table border="1">
       <tr>
@@ -49,59 +29,44 @@
          <td>토</td>
       </tr>
       <tr>
-<%
-         for(int i=1; i<firstDayOfWeek; i++){
-%>
-            <td>&nbsp;</td>
-<%
-         }
-         for(int i=1; i<=endDay; i++){
-%>            
-            <td>
-            	<%=i%><!-- 날짜 ~ 일 -->
-				<%
-					for(Map m : ebookListByMonth){
-						if(i == (Integer)m.get("d")){
-				%>
-							<div>
-								<a href="<%=request.getContextPath()%>/EbookOneController?ebookNo=<%=m.get("ebookNo")%>">
-									<%
-										String ebookTitle = (String)m.get("ebookTitle");
-										if(ebookTitle.length() > 10){
-									%>
-											<%=ebookTitle.substring(0,10) %>...
-									<%		
-										} else {
-									%>
-											<%=ebookTitle %>
-									<%
-										}
-									%>
-								</a>
-							</div>
-				<%				
-						}
-					}
-				%>
-			</td>
-			<%
-            	if(firstDayOfWeek % 7 == 0){
-			%>               
-            		</tr><tr>
-			<%               
-            	}
-            firstDayOfWeek += 1;
-         }
-         
-         firstDayOfWeek -= 1;
-         if((firstDayOfWeek % 7) != 0){
-            for(int i=1; i<=7-(firstDayOfWeek % 7); i++){
-%>             
-            	<td>&nbsp;</td>
-<%               
-            }
-         }
-%>
+      	<!-- 공백 + endDay 만큼 <td>가 필요 -->
+		<c:forEach var="i" begin="1" end="${endDay + (firstDayOfWeek-1)}" step="1">
+			<c:if test="${i-(firstDayOfWeek-1) <= 0}">
+				<td>&nbsp;</td>
+			</c:if>
+			<c:if test="${i-(firstDayOfWeek-1) > 0}">
+				<td>
+					<div>${i-(firstDayOfWeek-1)}</div>
+					<div>
+						<c:forEach var="m" items="${ebookListByMonth}">
+							<c:if test="${(i-(firstDayOfWeek-1)) == m.d}">
+								<div>
+									<a href="${pageContext.request.contextPath}/EbookOneController?ebookNo=${m.ebookNo}">
+										<c:if test="${m.ebookTitle.length() > 10}">
+											${m.ebookTitle.substring(0,10)}...
+										</c:if>
+										<c:if test="${m.ebookTitle.length() <= 10}">
+											${m.ebookTitle}
+										</c:if>
+									</a>
+								</div>
+							</c:if>
+						</c:forEach>	
+					</div>
+				</td>
+				
+			</c:if>
+			
+			<c:if test="${i%7 ==0}">
+				</tr><tr>
+			</c:if>
+		</c:forEach>
+		<!-- td 반복 후 채워지지 않는 자리가 있다면... -->
+		<c:if test="${(endDay + (firstDayOfWeek-1)) % 7 != 0}">
+			<c:forEach begin="1" end="${7-(endDay+(firstDayOfWeek-1))%7}" step="1">
+				<td>&nbsp;</td>
+			</c:forEach>
+		</c:if>
       </tr>
    </table>
 </body>

@@ -1,6 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="mall.client.vo.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,73 +11,61 @@
 	<jsp:include page="/WEB-INF/view/inc/mainMenu.jsp"></jsp:include>
 	
 	<h1>ebookOne</h1>
-	<%
-		// 형변환
-		Ebook ebook = (Ebook)request.getAttribute("ebook");
-	%>
 		<table border="1">
 			<tr>
 				<th>Title</th>
-            	<td><%=ebook.getEbookTitle() %></td>
+            	<td>${ebook.ebookTitle}</td>
 			</tr>
 			<tr>
 				<th>ISBN</th>
-            	<td><%=ebook.getEbookISBN() %></td>
+				<td>${ebook.ebookISBN}</td>
 			</tr>
 			<tr>
 				<th>Name</th>
-				<td><%=ebook.getCategoryName() %></td>
+				<td>${ebook.categoryName}</td>
 			</tr>
 			<tr>
 				<th>Author</th>
-				<td><%=ebook.getEbookAuthor() %></td>
+				<td>${ebook.ebookAuthor}</td>
 			</tr>
 			<tr>
 				<th>Company</th>
-            	<td><%=ebook.getEbookCompany() %></td>
+				<td>${ebook.ebookCompany}</td>
 			</tr>
 			<tr>
 				<th>Page Count</th>
-				<td><%=ebook.getEbookPageCount() %></td>
+				<td>${ebook.ebookPageCount}</td>
 			</tr>
 			<tr>
 				<th>Price</th>
-				<td><%=ebook.getEbookPrice() %></td>
+				<td>${ebook.ebookPrice}</td>
 			</tr>
 			<tr>
 				<th>Summary</th>
-				<td><%=ebook.getEbookSummary() %></td>
+				<td>${ebook.ebookSummary}</td>
 			</tr>
 			<tr>
 				<th>Image</th>
-				<td><img src="<%=request.getContextPath()%>/img/<%=ebook.getEbookImg()%>" width="240" height="300"></td>
+				<td><img src="${pageContext.request.contextPath}/img/${ebook.ebookImg}" width="240" height="300"></td>
 			</tr>
 			<tr>
 				<th>Date</th>
-				<td><%=ebook.getEbookDate().substring(0,11)%></td>
+				<td>${ebook.ebookDate}</td>
 			</tr>
 			<tr>
 				<th>State</th>
-				<td><%=ebook.getEbookState() %></td>
+				<td>${ebook.ebookState}</td>
 			</tr>
 		</table>
 		
 		<!-- InsertCartController?ebookNo - CartDao.insertCart() - redirect: CartListController -->
-		<a href="<%=request.getContextPath()%>/InsertCartController?ebookNo=<%=ebook.getEbookNo()%>">
-			<% 
-				if(session.getAttribute("loginClient") == null 
-					|| ebook.getEbookState().equals("품절")
-					|| ebook.getEbookState().equals("절판")
-					|| ebook.getEbookState().equals("구편절판")){
-			%>
-					<button type="submit" disabled="disabled">장바구니 추가</button>
-			<%
-				} else {
-			%>
-					<button type="submit">장바구니 추가</button>
-			<%
-				}
-			%>
+		<a href="${pageContext.request.contextPath}/InsertCartController?ebookNo=${ebook.ebookNo}">
+			<c:if test="${loginClient == null || ebook.ebookState.equals('품절') || ebook.ebookState.equals('절판') || ebook.ebookState.equals('구편절판')}">
+				<button type="submit" disabled="disabled">장바구니 추가</button>
+			</c:if>
+			<c:if test="${loginClient != null || ebook.ebookState.equals('판매중')}">
+				<button type="submit">장바구니 추가</button>
+			</c:if>
 		</a>
 </body>
 </html>

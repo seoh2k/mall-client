@@ -10,7 +10,7 @@
 	<jsp:include page="/WEB-INF/view/inc/mainMenu.jsp"></jsp:include>
 	
 	<h1>updateClientPw</h1>
-	<form method="post" action="<%=request.getContextPath()%>/UpdateClientPwController">
+	<form method="post" action="${pageContext.request.contextPath}/UpdateClientPwController">
 		<table border="1">
 			<tr>
 				<th>새 비밀번호</th>

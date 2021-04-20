@@ -48,11 +48,31 @@ public class EbookCalendarController extends HttpServlet {
 		
 		List<Map<String, Object>> ebookListByMonth = this.ebookDao.selectEbookListByMonth(currentYear, currentMonth);
 		
+		// preYear, preMonth, nextYear, nextMonth
+		int preMonth = currentMonth - 1;
+		int preYear = currentYear;
+		if(preMonth == 0){
+			preMonth = 12;
+			preYear -= 1;
+		}
+		int nextMonth = currentMonth + 1;
+		int nextYear = currentYear;
+		if(nextMonth == 13){
+			nextMonth = 1;
+			nextYear += 1;
+		}
+		
 		request.setAttribute("ebookListByMonth", ebookListByMonth);
 		request.setAttribute("currentYear", currentYear);
 		request.setAttribute("currentMonth", currentMonth);
 		request.setAttribute("endDay", endDay);
 		request.setAttribute("firstDayOfWeek", firstDayOfWeek);
+		
+		request.setAttribute("preMonth", preMonth);
+		request.setAttribute("preYear", preYear);
+		request.setAttribute("nextMonth", nextMonth);
+		request.setAttribute("nextYear", nextYear);
+		
 		request.getRequestDispatcher("/WEB-INF/view/ebook/ebookCalendar.jsp").forward(request, response);
 	}
 }

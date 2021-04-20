@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.*" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,11 +12,6 @@
 	
 	<!-- cartList -->
 	<h1>장바구니</h1>
-	
-	<!-- request 객체에 담아둔 list 가져오기 -->
-	<%
-		List<Map<String, Object>> cartList = (List<Map<String, Object>>)(request.getAttribute("cartList"));
-	%>
 	
 	<table border="1">
 		<thead>
@@ -31,27 +26,19 @@
 			</tr>
 		</thead>
 		<tbody>
-		<%
-			for(Map<String, Object> map : cartList){
-				int cartNo = (int)map.get("cartNo");
-				String ebookTitle = (String)map.get("ebookTitle");
-				int ebookNo = (int)map.get("ebookNo");
-				String cartDate = (String)map.get("cartDate");
-		%>
-				<tr>
-					<td><input type="checkbox" name=""></td>
-					<td><%=cartNo %></td>
-					<td><%=ebookNo %></td>
-					<td><%=ebookTitle %></td>
-					<td><%=cartDate.substring(0,11) %></td>
-					<!-- DeleteCartController - CartDao.deleteCart() - redirect: /CartListController --> 
-					<td><a href="<%=request.getContextPath()%>/DeleteCartController?ebookNo=<%=ebookNo%>">삭제</a></td>
-					<!-- InsertOrdersController - insertOrders(), deleteCart(): ISSUE 트랜잭션 처리 - redirect: /OrdersListController -->
-					<td><a href="<%=request.getContextPath()%>/InsertOrdersController?ebookNo=<%=ebookNo%>&cartNo=<%=cartNo %>">주문</a></td> 
-				</tr>
-		<%
-				}
-		%>
+		<c:forEach var="m" items="${cartList}">
+			<tr>
+				<td><input type="checkbox" name=""></td>
+				<td>${m.cartNo}</td>
+				<td>${m.ebookNo}</td>
+				<td>${m.ebookTitle}</td>
+				<td>${m.cartDate.substring(0,11)}</td>
+				<!-- DeleteCartController - CartDao.deleteCart() - redirect: /CartListController --> 
+				<td><a href="${pageContext.request.contextPath }/DeleteCartController?ebookNo=${m.ebookNo}">삭제</a></td>
+				<!-- InsertOrdersController - insertOrders(), deleteCart(): ISSUE 트랜잭션 처리 - redirect: /OrdersListController -->
+				<td><a href="${pageContext.request.contextPath }/InsertOrdersController?ebookNo=${m.ebookNo}&cartNo=${m.cartNo}">주문</a></td> 
+			</tr>
+		</c:forEach>
 		</tbody>
 	</table>
 </body>

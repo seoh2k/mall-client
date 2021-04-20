@@ -7,7 +7,7 @@
 </head>
 <body>
 	<h1>회원가입</h1>
-	<form method="post" action="<%=request.getContextPath()%>/InsertClientController"> <!-- 포스트방식으로 넘어간다 -->
+	<form method="post" action="${pageContext.request.contextPath}/InsertClientController"> <!-- 포스트방식으로 넘어간다 -->
 		<table border="1">
 			<tr>
 				<th>clientMail</th>

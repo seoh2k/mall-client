@@ -43,219 +43,143 @@ public class EbookDao {
 		return list;
 	}
 	
-	//전체 책 가져오기 (검색어 여부, 카테고리정렬 여부, 검색기능을 이용했을때는 카테고리 정렬을 할수없음.)
-	public int totalCount(String searchWord, String categoryName ) {
+	// ebook 천체 행 수 가져오기
+	public int totalCount(String categoryName, String searchWord) {
+		
 		this.dbUtil = new DBUtil();
-		int totalRow = 0;
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		//검색어와 카테고리 정렬이 없을때 모든 책의 수
-		if(searchWord == null && categoryName == null) {
-			try {
-				conn = this.dbUtil.getConnection();
-				//sql
-				String sql = "SELECT COUNT(*) cnt FROM ebook";
-				stmt = conn.prepareStatement(sql);
-				rs = stmt.executeQuery();
-
-				if(rs.next()) {
-					totalRow = rs.getInt("cnt");
-				}
-			} catch (Exception e){
-				e.printStackTrace();
-			} finally {
-				this.dbUtil.close(rs, stmt, conn);
-			}
-		} else if(searchWord != null) { //검색어가 있을때
-			try {
-				conn = this.dbUtil.getConnection();
-				//sql
-				String sql = "SELECT COUNT(*) cnt FROM ebook WHERE ebook_title LIKE ?";
+		int totalRow = 0;
+		
+		if(searchWord == null) {
+			searchWord = "";
+		}
+		
+		try {
+			conn = dbUtil.getConnection();
+			String sql = null;
+			if(categoryName == null) { // 카테고리 선택 안했을 경우(전체 선택)
+				sql = "SELECT COUNT(*) FROM ebook WHERE ebook_title like ?";
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, "%"+searchWord+"%");
-				System.out.println(sql + "<---EbookDao 에서 totalCount의 stmt");
-				rs = stmt.executeQuery();
-
-				if(rs.next()) {
-					totalRow = rs.getInt("cnt");
-				}
-			} catch (Exception e){
-				e.printStackTrace();
-			} finally {
-				this.dbUtil.close(rs, stmt, conn);
-			}
-		} else if (categoryName != null) {
-			try {
-				conn = this.dbUtil.getConnection();
-				//sql
-				String sql = "SELECT COUNT(*) cnt FROM ebook WHERE category_name = ?";
+			} else {
+				sql = "SELECT COUNT(*) FROM ebook WHERE category_name=? AND ebook_title like ?";
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, categoryName);
-				System.out.println(sql + "<---EbookDao 에서 totalCount의 stmt");
-				rs = stmt.executeQuery();
-
-				if(rs.next()) {
-					totalRow = rs.getInt("cnt");
-				}
-			} catch (Exception e){
-				e.printStackTrace();
-			} finally {
-				this.dbUtil.close(rs, stmt, conn);
+				stmt.setString(2, "%"+searchWord+"%");
 			}
+
+			System.out.println("totalCount: " + stmt); //디버깅
+			
+			rs = stmt.executeQuery();
+
+			if(rs.next()) {
+				totalRow = rs.getInt("COUNT(*)");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbUtil.close(rs, stmt, conn);
 		}
 
-		//리턴
 		return totalRow;
 	}
 	
 	//책 상세보기 제공을 위한 메서드
 	public Ebook selectEbookOne(int ebookNo) {
 		this.dbUtil = new DBUtil();
-		Ebook returnEbook = null;
+		Ebook ebook = null;
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		try {
-			conn = this.dbUtil.getConnection();
-			//sql
-			String sql = "SELECT ebook_no ebookNo, ebook_isbn ebookISBN, category_name categoryName, ebook_title ebookTitle, ebook_author ebookAuthor, ebook_company ebookCompany, ebook_page_count ebookPageCount, ebook_price ebookPrice, ebook_img ebookImg, ebook_summary ebookSummary, ebook_date ebookDate,ebook_state ebookState FROM ebook WHERE ebook_no = ?";
+			conn = dbUtil.getConnection();
+			String sql = "SELECT ebook_no ebookNo, ebook_isbn ebookISBN, category_name categoryName, ebook_title ebookTitle, ebook_author ebookAuthor, ebook_company ebookCompany, ebook_page_count ebookPageCount, ebook_price ebookPrice, ebook_img ebookImg, ebook_summary ebookSummary, ebook_date ebookDate,ebook_state ebookState FROM ebook WHERE ebook_no=?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, ebookNo);
-			//디버깅
-			System.out.println(sql + "<---EbookDao 에서 selectEbookOne의 stmt");
+			System.out.println("selectEbookOne " + stmt);
+			
 			rs = stmt.executeQuery();
 			
-			//리턴 할 ebook객체에 정보 저장
 			if(rs.next()) {
-				returnEbook = new Ebook();
-				returnEbook.setEbookNo(rs.getInt("ebookNo"));
-				returnEbook.setCategoryName(rs.getString("categoryName"));
-				returnEbook.setEbookISBN(rs.getString("ebookISBN"));
-				returnEbook.setEbookTitle(rs.getString("ebookTitle"));
-				returnEbook.setEbookAuthor(rs.getString("ebookAuthor"));
-				returnEbook.setEbookCompany(rs.getString("ebookCompany"));
-				returnEbook.setEbookPageCount(rs.getInt("ebookPageCount"));
-				returnEbook.setEbookPrice(rs.getInt("ebookPrice"));
-				returnEbook.setEbookSummary(rs.getString("ebookSummary"));
-				returnEbook.setEbookImg(rs.getString("ebookImg"));
-				returnEbook.setEbookDate(rs.getString("ebookDate"));
-				returnEbook.setEbookState(rs.getString("ebookState"));
+				ebook = new Ebook();
+				ebook.setEbookNo(rs.getInt("ebookNo"));
+		        ebook.setCategoryName(rs.getString("categoryName"));
+		        ebook.setEbookISBN(rs.getString("ebookISBN"));
+		        ebook.setEbookTitle(rs.getString("ebookTitle"));
+		        ebook.setEbookAuthor(rs.getString("ebookAuthor"));
+		        ebook.setEbookCompany(rs.getString("ebookCompany"));
+		        ebook.setEbookPageCount(rs.getInt("ebookPageCount"));
+		        ebook.setEbookPrice(rs.getInt("ebookPrice"));
+		        ebook.setEbookSummary(rs.getString("ebookSummary"));
+		        ebook.setEbookImg(rs.getString("ebookImg"));
+		        ebook.setEbookDate(rs.getString("ebookDate"));
+		        ebook.setEbookState(rs.getString("ebookState"));
 			}
-			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			this.dbUtil.close(rs, stmt, conn);
+			dbUtil.close(rs, stmt, conn);
 		}
-		//리턴
-		return returnEbook;
 		
+		return ebook;
 	}
 	
-	//ebook찾아보기 selectEbookListByPageAndCategory와 합칠수도 있지만 가독성을 위해서 분리함.
-	public List<Ebook> selectEbookListByPageAndSearchword(int beginRow, int rowPerPage, String searchWord) {
-		List<Ebook> returnList = new ArrayList<>();
-		this.dbUtil = new DBUtil();
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		//선택된 카테고리가 없다면 모든 책 셀렉트
-		try {
-			conn = this.dbUtil.getConnection();
-			//sql
-			String sql = "SELECT ebook_no ebookNo, ebook_title ebookTitle, ebook_price ebookPrice FROM ebook WHERE ebook_title LIKE ? ORDER BY ebook_date DESC LIMIT ?, ?";
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, "%"+ searchWord +"%");
-			stmt.setInt(2, beginRow);
-			stmt.setInt(3, rowPerPage);
-			//디버깅
-			System.out.println(stmt + "<---EbookDao 에서 selectEbookListByPageAndSearchword의 stmt");
-
-			rs = stmt.executeQuery();
-			//반복문 돌면서 리스트에 ebook객체 정보담기
-			while(rs.next()) {
-				Ebook ebook = new Ebook();
-				ebook.setEbookNo(rs.getInt("ebookNo"));
-				ebook.setEbookTitle(rs.getString("ebookTitle"));
-				ebook.setEbookPrice(rs.getInt("ebookPrice"));
-				returnList.add(ebook);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			this.dbUtil.close(rs, stmt, conn);
-		}
-
-		return returnList;
-	}
-
-	//카테고리별 ebook가져오기
-	public List<Ebook> selectEbookListByPageAndCategory(int beginRow, int rowPerPage, String categoryName) {
+	public List<Ebook> selectEbookListByPage(int beginRow, int rowPerPage, String categoryName, String searchWord){
+		//필요 객체 초기화
 		List<Ebook> list = new ArrayList<>();
 		this.dbUtil = new DBUtil();
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-
-		//선택된 카테고리가 없다면 모든 책 셀렉트
-		if(categoryName == null) {
-			try {
-				conn = this.dbUtil.getConnection();
-				//sql
-				String sql = "SELECT ebook_no ebookNo, ebook_title ebookTitle, ebook_price ebookPrice FROM ebook ORDER BY ebook_date DESC LIMIT ?, ?";
+		
+		if(searchWord == null) {
+			searchWord = "";
+		}
+		
+		try {
+			conn = dbUtil.getConnection();
+			System.out.println("DAO categoryName: " + categoryName);
+			if(categoryName == null) { // 카테고리 선택 안했을 경우(전체 선택)
+				String sql = "SELECT * FROM ebook WHERE ebook_title like ? ORDER BY ebook_date DESC LIMIT ?, ?";
 				stmt = conn.prepareStatement(sql);
-				stmt.setInt(1, beginRow);
-				stmt.setInt(2, rowPerPage);
-				//디버깅
-				System.out.println(sql + "<---EbookDao 에서 selectEbookListByPage의 stmt");
-
-				rs = stmt.executeQuery();
-				//반복문 돌면서 리스트에 ebook객체 정보담기
-				while(rs.next()) {
-					Ebook ebook = new Ebook();
-					ebook.setEbookNo(rs.getInt("ebookNo"));
-					ebook.setEbookTitle(rs.getString("ebookTitle"));
-					ebook.setEbookPrice(rs.getInt("ebookPrice"));
-					list.add(ebook);
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			} finally {
-				this.dbUtil.close(rs, stmt, conn);
-			}
-		} else {//선택된 카테고리가 있다면 그 카테고리만 셀렉트
-			try {
-				conn = this.dbUtil.getConnection();
-				//sql
-				String sql = "SELECT ebook_no ebookNo, ebook_title ebookTitle, ebook_price ebookPrice FROM ebook WHERE category_name = ? ORDER BY ebook_date DESC LIMIT ?, ?";
-				stmt = conn.prepareStatement(sql);
-				stmt.setString(1, categoryName);
+				stmt.setString(1, "%"+searchWord+"%");
 				stmt.setInt(2, beginRow);
 				stmt.setInt(3, rowPerPage);
-				//디버깅
-				System.out.println(sql + "<---EbookDao 에서 selectEbookListByPage의 stmt");
 
-				rs = stmt.executeQuery();
-				//반복문 돌면서 리스트에 ebook객체 정보담기
-				while(rs.next()) {
-					Ebook ebook = new Ebook();
-					ebook.setEbookNo(rs.getInt("ebookNo"));
-					ebook.setEbookTitle(rs.getString("ebookTitle"));
-					ebook.setEbookPrice(rs.getInt("ebookPrice"));
-					list.add(ebook);
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			} finally {
-				this.dbUtil.close(rs, stmt, conn);
+			} else {
+				String sql = "SELECT * FROM ebook WHERE category_name=? AND ebook_title like ? ORDER BY ebook_date DESC LIMIT ?, ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, categoryName);
+				stmt.setString(2, "%"+searchWord+"%");
+				stmt.setInt(3, beginRow);
+				stmt.setInt(4, rowPerPage);
+				
 			}
-		}
+			
+			System.out.println("selectEbookListByPage: " + stmt); //디버깅
+			
+			rs = stmt.executeQuery();
 
-		//리스트 리턴
+			while(rs.next()) {
+				Ebook ebook = new Ebook();
+				ebook.setEbookNo(rs.getInt("ebook_no"));
+				ebook.setCategoryName(rs.getString("category_name"));
+				ebook.setEbookTitle(rs.getString("ebook_title"));
+				ebook.setEbookPrice(rs.getInt("ebook_price"));
+				ebook.setEbookImg(rs.getString("ebook_img"));
+				list.add(ebook);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbUtil.close(rs, stmt, conn);
+		}
+		
 		return list;
-	}
-					
+	}				
 }
