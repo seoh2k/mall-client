@@ -8,11 +8,12 @@
 </head>
 <body>
 	<jsp:include page="/WEB-INF/view/inc/mainMenu.jsp"></jsp:include>
-	<!-- 메뉴1 로그인/회원가입/내정보 -->
-	<!-- 장바구니(세션) -->
-	<!-- 캘린더(이번달에 나온 책들) -->
-	<!-- 베스트셀러(주문량) -->
-	<!-- 메뉴2 카테고리 -->
+	
+	<div>
+		<div>오늘 접속자: ${statsCount}</div>
+		<div>전체 접속자: ${total}</div>
+	</div>
+	
 	<h1>index</h1> <!-- jsp 말고 서블릿을 실행해야한다 -->
 	
 	<!-- 카테고리별 목록을 볼 수 있는 메뉴(네비게이션) -->

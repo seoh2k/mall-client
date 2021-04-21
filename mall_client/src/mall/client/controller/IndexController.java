@@ -19,8 +19,12 @@ public class IndexController extends HttpServlet {
 	private EbookDao ebookDao;
 	private CategoryDao categoryDao;
 	private OrdersDao ordersDao;
+	private StatsDao statsDao;
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		System.out.println("/IndexController 시작");
+		
 		// 페이징
 		int currentPage = 1;
 		if(request.getParameter("currentPage") != null) {
@@ -64,8 +68,19 @@ public class IndexController extends HttpServlet {
 		// EbookList totalCount
 		int totalCount = this.ebookDao.totalCount(categoryName, searchWord); // EbookDao 객체 생성 후 선언해줘야 한다.
 		System.out.println(totalCount +"<---IndexController에서 totalRow");
-				
+			
+		// 접속자 관련 데이터
+		this.statsDao = new StatsDao();
+		long total = this.statsDao.selectStatsTotal();
+		Stats stats = this.statsDao.selectStatsByToday();
+		long statsCount = 0;
+		if(stats != null) {
+			statsCount = stats.getStatsCount();
+		}
+		
 		// request객체에 리스트 저장 후 View forward
+		request.setAttribute("total", total);
+		request.setAttribute("statsCount", statsCount);
 		request.setAttribute("bestOrdersList", bestOrdersList);
 		request.setAttribute("searchWord", searchWord);
 		request.setAttribute("currentPage", currentPage);
